@@ -4,10 +4,10 @@ export default {
       name: 'preset-default',
       params: {
         overrides: {
-          removeViewBox: false,
+          removeViewBox: false, // validation requires viewBox
         },
       },
     },
-    'removeXMLNS',
+    'removeXMLNS', // not needed by individual icons
   ],
 };
