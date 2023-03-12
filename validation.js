@@ -31,4 +31,7 @@ if(errors.length > 0) {
   console.warn(`Encountered ${errors.length} svg source errors!\n`)
   console.table(errors, ['reason'])
   process.exit(1)
+} else {
+  console.info('SVG validation complete!')
+  process.exit(0)
 }
