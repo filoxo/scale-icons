@@ -8,12 +8,12 @@ import { resolve } from 'path'
 //     .replace(/([a-z])([A-Z])/g, '$1-$2') // replace "camelCase" to "camel-case"
 //     .replace(/[\s_\/]+/g, '-') // Replace spaces, underscore, and slash with - (dash)
 //     .toLowerCase()
-  
+
 export default defineConfig({
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points
-      entry: resolve(__dirname, 'src/Icon.tsx'),
+      entry: resolve(__dirname, 'src/Icon.ts'),
       name: 'Icons',
 
     },
