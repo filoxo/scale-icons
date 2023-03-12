@@ -6,4 +6,5 @@ export const sources = Object.keys(sourcesRaw).map((source) => {
   return basename
 })
 
-export type IconNames = keyof typeof sources
+// ! this will get all the icons, includes the wrongs ones
+export type IconNames = typeof sources[number];
