@@ -1,6 +1,7 @@
 import { globby } from 'globby';
-import { parse } from 'postsvg'
+import { parse as parseSvg } from 'postsvg'
 import { readFile, writeFile } from 'node:fs/promises'
+import { parse as parsePath } from 'node:path'
 import { optimize, loadConfig } from 'svgo';
 import mixer from 'svg-mixer';
 
@@ -31,7 +32,7 @@ const svgoConfig = await loadConfig();
 const pipelines = paths.map(async (path) => {
   // pipeline per file
   const contents = await readFile(path, 'utf-8')
-  const svgAst = parse(contents)
+  const svgAst = parseSvg(contents)
   validate(svgAst)
   const { data } = optimize(contents, { ...svgoConfig, path })
   return writeFile(path, data)
@@ -52,10 +53,9 @@ if(errors.length > 0) {
   // process.exit(0)
 }
 
-const filenamesUnion = paths.map((path) => {
-  const filename = path.split('/').pop().split('.').shift()
-  return `${JSON.stringify(filename)}`
-}).join('\n\t| ')
+const filenamesUnion = paths
+  .map((path) => `${JSON.stringify(parsePath(path).name)}`)
+  .join('\n\t| ')
 
 // could use ts-morph but... this is simpler. its just a union of string literals.
 const IconTypeSource = `export type IconName = ${filenamesUnion};`
@@ -67,11 +67,11 @@ const spritesheet = await mixer(SVG_WILDCARD,
     spriteType: 'stack', 
     spriteConfig: {
       usages: false,
-      usageClassName: 'icon-sprite'
-      
-    }
+      usageClassName: 'icon-sprite',
+    },
+    generateSymbolId: (path, _querystring) => parsePath(path).name
   }
 )
 
-await spritesheet.write('dist/sprite.svg')
-console.info('sprite.svg written to dist/')
+await spritesheet.write('public/sprite.svg')
+console.info('sprite.svg written to public/')
