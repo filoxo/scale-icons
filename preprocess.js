@@ -23,11 +23,11 @@ const validate = (tree) => {
   if(!tree.root.attrs.height === false) {
     throw new Error(`height is incorrect for ${path}. Icon svg sources must not have defined height attribute.`)
   }
-
- 
 }
 
-const paths = await globby('src/svg/*.svg');
+const paths = await globby(SVG_WILDCARD);
+const svgoConfig = await loadConfig();
+
 const pipelines = paths.map(async (path) => {
   // pipeline per file
   const contents = await readFile(path, 'utf-8')
@@ -36,8 +36,12 @@ const pipelines = paths.map(async (path) => {
   const { data } = optimize(contents, { ...svgoConfig, path })
   return writeFile(path, data)
 })
+
 const results = await Promise.allSettled(pipelines)
-const errors = results.filter(result => result.status === 'rejected').map(err => err.reason)
+
+const errors = results
+  .filter(result => result.status === 'rejected')
+  .map(err => err.reason)
 
 if(errors.length > 0) {
   console.warn(`Encountered ${errors.length} svg errors!\n`)
@@ -45,7 +49,7 @@ if(errors.length > 0) {
   process.exit(1)
 } else {
   console.info('SVG preprocessing complete!')
-  process.exit(0)
+  // process.exit(0)
 }
 
 const spritesheet = await mixer(SVG_WILDCARD, 
