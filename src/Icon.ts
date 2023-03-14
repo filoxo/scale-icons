@@ -1,11 +1,13 @@
-import React from 'react'
-import type { IconName } from './IconName'
+import { createElement } from 'react'
+import type { IconName } from './IconName.type'
 
 const SPRITE_PATH = 'sprite.svg'
 
 export const Icon = ({ name }: { name: IconName }) =>
-    React.createElement(
+    createElement(
         'svg',
         { name },
-        React.createElement('use', { "x:href": `${SPRITE_PATH}#${name}` })
+        createElement('use', { "x:href": `${SPRITE_PATH}#${name}` })
     )
+
+export type { IconName } 
