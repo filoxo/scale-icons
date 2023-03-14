@@ -2,8 +2,9 @@ import { globby } from 'globby';
 import { parse } from 'postsvg'
 import { readFile, writeFile } from 'node:fs/promises'
 import { optimize, loadConfig } from 'svgo';
+import mixer from 'svg-mixer';
 
-const svgoConfig = await loadConfig();
+const SVG_WILDCARD = 'src/svg/*.svg'
 
 const validate = (tree) => {
   // TODO: validate naming convention?
@@ -46,3 +47,16 @@ if(errors.length > 0) {
   console.info('SVG preprocessing complete!')
   process.exit(0)
 }
+
+const spritesheet = await mixer(SVG_WILDCARD, 
+  {
+    spriteType: 'stack', 
+    spriteConfig: {
+      usages: false,
+      usageClassName: 'icon-sprite'
+    }
+  }
+)
+
+await spritesheet.write('dist/sprite.svg')
+console.info('sprite.svg written to dist/')
