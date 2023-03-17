@@ -59,12 +59,15 @@ if(errors.length > 0) {
   // process.exit(0)
 }
 
-const filenamesUnion = paths
+const filenames = paths
   .map((path) => `${JSON.stringify(parsePath(path).name)}`)
-  .join('\n\t| ')
+  .join(',\n\t')
 
-// could use ts-morph but... this is simpler. its just a union of string literals.
-const IconTypeSource = `export type IconName = ${filenamesUnion};`
+// could use ts-morph but... this is simpler. its just a join of string literals.
+const IconTypeSource = `export const ICON_NAMES = [
+    ${filenames}
+] as const;
+export type IconName = typeof ICON_NAMES[number];`
 
 await writeFile('src/IconNames.ts', IconTypeSource)
 
