@@ -27,6 +27,12 @@ const validate = (tree) => {
 }
 
 const paths = await globby(SVG_WILDCARD);
+
+if(paths.length < 1) {
+  console.error(`No SVG files found.`)
+  process.exit(1)
+}
+ 
 const svgoConfig = await loadConfig();
 
 const pipelines = paths.map(async (path) => {
@@ -60,7 +66,7 @@ const filenamesUnion = paths
 // could use ts-morph but... this is simpler. its just a union of string literals.
 const IconTypeSource = `export type IconName = ${filenamesUnion};`
 
-await writeFile('src/IconName.type.ts', IconTypeSource)
+await writeFile('src/IconNames.ts', IconTypeSource)
 
 const spritesheet = await mixer(SVG_WILDCARD, 
   {
