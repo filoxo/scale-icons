@@ -1,4 +1,4 @@
-import type { IconName } from './IconName.type'
+import type { IconName } from './IconNames'
 
 const SPRITE_PATH = 'sprite.svg'
 
@@ -8,4 +8,4 @@ export const Icon = ({ name }: { name: IconName }) => (
     </svg>
 )
 
-export type { IconName } 
+export type { IconName }
